@@ -78,7 +78,7 @@ function drawBatteryMeter(dc, x, y, width, height) {
 
 
 function writeBatteryLevel(dc, x, y, width, height) {
-	dc.setColor(gThemeColour, Graphics.COLOR_TRANSPARENT);
+	dc.setColor(gMonoLightColour, Graphics.COLOR_TRANSPARENT);
 	dc.drawText(x - (width / 2), y - height, gNormalFont, Math.floor(Sys.getSystemStats().battery).format(INTEGER_FORMAT) + "%", Graphics.TEXT_JUSTIFY_LEFT);
 }
 

@@ -93,7 +93,9 @@ class Indicators extends Ui.Drawable {
 		}
 
 		if (indicatorType == 5 /* INDICATOR_TYPE_BATTERY_NUMERIC */) {
-			writeBatteryLevel(dc, x, y, mBatteryWidth, mBatteryWidth / 2);
+			var availableHeight = mBatteryWidth / 2;
+			drawBatteryMeter(dc, x, y - 6, mBatteryWidth, 2*availableHeight / 3);
+			writeBatteryLevel(dc, x, y - 6 + availableHeight / 4, mBatteryWidth, availableHeight / 3);
 			return;
 		}
 
