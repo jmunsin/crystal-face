@@ -700,7 +700,7 @@ class DataFields extends Ui.Drawable {
 		//Sys.println("delta " + delta);
 
 		// Hour angle.
-		var cosOmega = (Math.sin(-0.83d * rad) - Math.sin(lat * rad) * Math.sin(delta))
+		var cosOmega = (Math.sin(-6.0d * rad) - Math.sin(lat * rad) * Math.sin(delta))
 			/ (Math.cos(lat * rad) * Math.cos(delta));
 		//Sys.println("cosOmega " + cosOmega);
 
