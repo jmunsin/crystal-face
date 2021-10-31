@@ -30,7 +30,21 @@ const BATTERY_MARGIN = SCREEN_MULTIPLIER;
 // x, y are co-ordinates of centre point.
 // width and height are outer dimensions of battery "body".
 function drawBatteryMeter(dc, x, y, width, height) {
-	dc.setColor(gThemeColour, Graphics.COLOR_TRANSPARENT);
+	// Fill.
+	// #8: battery returned as float. Use floor() to match native. Must match getValueForFieldType().
+	var batteryLevel = Math.floor(Sys.getSystemStats().battery);
+
+	// Fill colour based on battery level.
+	var fillColour;
+	if (batteryLevel <= /* BATTERY_LEVEL_CRITICAL */ 10) {
+		fillColour = Graphics.COLOR_RED;
+	} else if (batteryLevel <= /* BATTERY_LEVEL_LOW */ 20) {
+		fillColour = Graphics.COLOR_YELLOW;
+	} else {
+		fillColour = gThemeColour;
+	}
+
+	dc.setColor(fillColour, Graphics.COLOR_TRANSPARENT);
 	dc.setPenWidth(/* BATTERY_LINE_WIDTH */ 2);
 
 	// Body.
@@ -51,20 +65,6 @@ function drawBatteryMeter(dc, x, y, width, height) {
 		/* BATTERY_HEAD_WIDTH */ 2,
 		BATTERY_HEAD_HEIGHT);
 
-	// Fill.
-	// #8: battery returned as float. Use floor() to match native. Must match getValueForFieldType().
-	var batteryLevel = Math.floor(Sys.getSystemStats().battery);		
-
-	// Fill colour based on battery level.
-	var fillColour;
-	if (batteryLevel <= /* BATTERY_LEVEL_CRITICAL */ 10) {
-		fillColour = Graphics.COLOR_RED;
-	} else if (batteryLevel <= /* BATTERY_LEVEL_LOW */ 20) {
-		fillColour = Graphics.COLOR_YELLOW;
-	} else {
-		fillColour = gThemeColour;
-	}
-
 	dc.setColor(fillColour, Graphics.COLOR_TRANSPARENT);
 
 	var lineWidthPlusMargin = (/* BATTERY_LINE_WIDTH */ 2 + BATTERY_MARGIN);
@@ -78,8 +78,18 @@ function drawBatteryMeter(dc, x, y, width, height) {
 
 
 function writeBatteryLevel(dc, x, y, width, height) {
-	dc.setColor(gMonoLightColour, Graphics.COLOR_TRANSPARENT);
-	dc.drawText(x - (width / 2), y - height, gNormalFont, Math.floor(Sys.getSystemStats().battery).format(INTEGER_FORMAT) + "%", Graphics.TEXT_JUSTIFY_LEFT);
+	var batteryLevel = Math.floor(Sys.getSystemStats().battery);
+	var colour;
+	if (batteryLevel <= /* BATTERY_LEVEL_CRITICAL */ 10) {
+		colour = Graphics.COLOR_RED;
+	} else if (batteryLevel <= /* BATTERY_LEVEL_LOW */ 20) {
+		colour = Graphics.COLOR_YELLOW;
+	} else {
+		colour = gMonoLightColour;
+	}
+
+	dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+	dc.drawText(x - (width / 2), y - height, gNormalFont, batteryLevel.format(INTEGER_FORMAT) + "%", Graphics.TEXT_JUSTIFY_LEFT);
 }
 
 class CrystalView extends Ui.WatchFace {
