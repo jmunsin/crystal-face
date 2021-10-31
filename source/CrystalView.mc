@@ -17,6 +17,7 @@ var gHoursColour;
 var gMinutesColour;
 
 var gNormalFont;
+var gSmallFont;
 var gIconsFont;
 
 const SCREEN_MULTIPLIER = (Sys.getDeviceSettings().screenWidth < 360) ? 1 : 2;
@@ -89,7 +90,7 @@ function writeBatteryLevel(dc, x, y, width, height) {
 	}
 
 	dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
-	dc.drawText(x - (width / 2), y - height, gNormalFont, batteryLevel.format(INTEGER_FORMAT) + "%", Graphics.TEXT_JUSTIFY_LEFT);
+	dc.drawText(x - (width / 2), y - height, gSmallFont, batteryLevel.format(INTEGER_FORMAT) + "%", Graphics.TEXT_JUSTIFY_LEFT);
 }
 
 class CrystalView extends Ui.WatchFace {
@@ -138,6 +139,7 @@ class CrystalView extends Ui.WatchFace {
 	// Load your resources here
 	function onLayout(dc) {
 		gIconsFont = Ui.loadResource(Rez.Fonts.IconsFont);
+		gSmallFont = Ui.loadResource(Rez.Fonts.SmallFont);
 
 		setLayout(Rez.Layouts.WatchFace(dc));
 		cacheDrawables();
