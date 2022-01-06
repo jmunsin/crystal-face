@@ -40,7 +40,7 @@ function drawBatteryMeter(dc, x, y, width, height) {
 	if (batteryLevel <= /* BATTERY_LEVEL_CRITICAL */ 10) {
 		fillColour = Graphics.COLOR_RED;
 	} else if (batteryLevel <= /* BATTERY_LEVEL_LOW */ 20) {
-		fillColour = Graphics.COLOR_YELLOW;
+		fillColour = Graphics.COLOR_PURPLE;
 	} else {
 		fillColour = gThemeColour;
 	}
@@ -84,7 +84,7 @@ function writeBatteryLevel(dc, x, y, width, height) {
 	if (batteryLevel <= /* BATTERY_LEVEL_CRITICAL */ 10) {
 		colour = Graphics.COLOR_RED;
 	} else if (batteryLevel <= /* BATTERY_LEVEL_LOW */ 20) {
-		colour = Graphics.COLOR_YELLOW;
+		colour = Graphics.COLOR_PURPLE;
 	} else {
 		colour = gMonoLightColour;
 	}
