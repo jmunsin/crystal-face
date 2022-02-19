@@ -11,6 +11,8 @@ using Toybox.Time;
 // location available.
 var gLocationLat = null;
 var gLocationLng = null;
+var gLastHrPoll = null;
+var gMinHr = null;
 
 (:background)
 class CrystalApp extends App.AppBase {
@@ -170,7 +172,7 @@ class CrystalApp extends App.AppBase {
 		}
 
 		// If there are any pending requests:
-		if (pendingWebRequests.keys().size() > 0) {
+		//if (pendingWebRequests.keys().size() > 0) {
 
 			// Register for background temporal event as soon as possible.
 			var lastTime = Bg.getLastTemporalEventTime();
@@ -181,7 +183,7 @@ class CrystalApp extends App.AppBase {
 			} else {
 				Bg.registerForTemporalEvent(Time.now());
 			}
-		}
+		//}
 
 		setProperty("PendingWebRequests", pendingWebRequests);
 	}

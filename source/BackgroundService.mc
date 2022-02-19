@@ -2,6 +2,7 @@ using Toybox.Background as Bg;
 using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
+using Toybox.Time;
 
 (:background)
 class BackgroundService extends Sys.ServiceDelegate {
@@ -17,6 +18,27 @@ class BackgroundService extends Sys.ServiceDelegate {
 	(:background_method)
 	function onTemporalEvent() {
 		//Sys.println("onTemporalEvent");
+		// Register for background temporal event as soon as possible.
+		var lastTime = Bg.getLastTemporalEventTime();
+		if (lastTime) {
+			// Events scheduled for a time in the past trigger immediately.
+			var nextTime = lastTime.add(new Time.Duration(5 * 60));
+			Bg.registerForTemporalEvent(nextTime);
+		} else {
+			Bg.registerForTemporalEvent(Time.now());
+		}
+		var now = Time.now();
+		var min;
+		if (gLastHrPoll != null) {
+			min = ActivityMonitor.getHeartRateHistory(now - gLastHrPoll, true).getMin();
+		} else {
+			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
+		}
+		if (gMinHr == null || min < gMinHr || gLastHrPoll.day != now.day) {
+			gMinHr = min;
+		}
+		gLastHrPoll = now;
+		//Sys.println("rhhr: " + gMinHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
 		if (pendingWebRequests != null) {
 

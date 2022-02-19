@@ -370,16 +370,20 @@ class DataFields extends Ui.Drawable {
 		switch (type) {
 			case FIELD_TYPE_HEART_RATE:
 			case FIELD_TYPE_HR_LIVE_5S:
-				// #34 Try to retrieve live HR from Activity::Info, before falling back to historical HR from ActivityMonitor.
-				activityInfo = Activity.getActivityInfo();
-				sample = activityInfo.currentHeartRate;
-				if (sample != null) {
-					value = sample.format(INTEGER_FORMAT);
-				} else if (ActivityMonitor has :getHeartRateHistory) {
-					sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true)
-						.next();
-					if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
-						value = sample.heartRate.format(INTEGER_FORMAT);
+				if (gMinHr != null) { // && ((Sys.getClockTime().sec % 3) == 0)) {
+					value = gMinHr.format(INTEGER_FORMAT);
+				} else {
+					// #34 Try to retrieve live HR from Activity::Info, before falling back to historical HR from ActivityMonitor.
+					activityInfo = Activity.getActivityInfo();
+					sample = activityInfo.currentHeartRate;
+					if (sample != null) {
+						value = sample.format(INTEGER_FORMAT);
+					} else if (ActivityMonitor has :getHeartRateHistory) {
+						sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true)
+							.next();
+						if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
+							value = sample.heartRate.format(INTEGER_FORMAT);
+						}
 					}
 				}
 				break;
