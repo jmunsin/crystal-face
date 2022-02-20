@@ -370,7 +370,7 @@ class DataFields extends Ui.Drawable {
 		switch (type) {
 			case FIELD_TYPE_HEART_RATE:
 			case FIELD_TYPE_HR_LIVE_5S:
-				if (gMinHr != null) { // && ((Sys.getClockTime().sec % 3) == 0)) {
+				if ((gMinHr != null) && ((Sys.getClockTime().sec % 3) == 0)) {
 					value = gMinHr.format(INTEGER_FORMAT);
 				} else {
 					// #34 Try to retrieve live HR from Activity::Info, before falling back to historical HR from ActivityMonitor.

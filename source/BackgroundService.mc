@@ -84,6 +84,9 @@ class BackgroundService extends Sys.ServiceDelegate {
 		} /* else {
 			Sys.println("onTemporalEvent() called with no pending web requests!");
 		} */
+		Bg.exit({
+			"MinHr" => gMinHr
+		});
 	}
 
 	// Sample time zone data:
@@ -125,7 +128,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 		}
 
 		Bg.exit({
-			"CityLocalTime" => data
+			"CityLocalTime" => data,
+			"MinHr" => gMinHr
 		});
 	}
 
@@ -208,7 +212,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 		}
 
 		Bg.exit({
-			"OpenWeatherMapCurrent" => result
+			"OpenWeatherMapCurrent" => result,
+			"MinHr" => gMinHr
 		});
 	}
 

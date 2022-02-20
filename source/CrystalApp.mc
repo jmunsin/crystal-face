@@ -199,6 +199,10 @@ class CrystalApp extends App.AppBase {
 	// pendingWebRequests keys.
 	(:background_method)
 	function onBackgroundData(data) {
+		var minHr = data.get("MinHr");
+		if (minHr != null) {
+			gMinHr = minHr;
+		}
 		var pendingWebRequests = getProperty("PendingWebRequests");
 		if (pendingWebRequests == null) {
 			//Sys.println("onBackgroundData() called with no pending web requests!");
@@ -206,20 +210,22 @@ class CrystalApp extends App.AppBase {
 		}
 
 		var type = data.keys()[0]; // Type of received data.
-		var storedData = getProperty(type);
-		var receivedData = data[type]; // The actual data received: strip away type key.
-		
-		// No value in showing any HTTP error to the user, so no need to modify stored data.
-		// Leave pendingWebRequests flag set, and simply return early.
-		if (receivedData["httpError"]) {
-			return;
-		}
+		if (!type.equals("MinHr")) {
+			var storedData = getProperty(type);
+			var receivedData = data[type]; // The actual data received: strip away type key.
 
-		// New data received: clear pendingWebRequests flag and overwrite stored data.
-		storedData = receivedData;
-		pendingWebRequests.remove(type);
-		setProperty("PendingWebRequests", pendingWebRequests);
-		setProperty(type, storedData);
+			// No value in showing any HTTP error to the user, so no need to modify stored data.
+			// Leave pendingWebRequests flag set, and simply return early.
+			if (receivedData["httpError"]) {
+				return;
+			}
+
+			// New data received: clear pendingWebRequests flag and overwrite stored data.
+			storedData = receivedData;
+			pendingWebRequests.remove(type);
+			setProperty("PendingWebRequests", pendingWebRequests);
+			setProperty(type, storedData);
+		}
 
 		Ui.requestUpdate();
 	}
