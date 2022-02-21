@@ -13,6 +13,7 @@ var gLocationLat = null;
 var gLocationLng = null;
 var gLastHrPoll = null;
 var gMinHr = null;
+var gMinHrNewDay = false;
 
 (:background)
 class CrystalApp extends App.AppBase {
@@ -200,8 +201,13 @@ class CrystalApp extends App.AppBase {
 	(:background_method)
 	function onBackgroundData(data) {
 		var minHr = data.get("MinHr");
-		if (minHr != null) {
+		var minHrNewDay = data.get("gMinHrNewDay");
+		if (gMinHr == null) {
+			gMinHr = getProperty("MinHr");
+		}
+		if (minHrNewDay || gMinHr == null || minHr < gMinHr) {
 			gMinHr = minHr;
+			setProperty("MinHr", gMinHr);
 		}
 		var pendingWebRequests = getProperty("PendingWebRequests");
 		if (pendingWebRequests == null) {

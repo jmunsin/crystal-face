@@ -37,6 +37,9 @@ class BackgroundService extends Sys.ServiceDelegate {
 		if (gMinHr == null || min < gMinHr || gLastHrPoll.day != now.day) {
 			gMinHr = min;
 		}
+		if (gLastHrPoll != null && gLastHrPoll.day != now.day) {
+			gMinHrNewDay = true;
+		}
 		gLastHrPoll = now;
 		//Sys.println("rhhr: " + gMinHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
@@ -85,7 +88,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 			Sys.println("onTemporalEvent() called with no pending web requests!");
 		} */
 		Bg.exit({
-			"MinHr" => gMinHr
+			"MinHr" => gMinHr,
+			"gMinHrNewDay" => gMinHrNewDay
 		});
 	}
 
@@ -129,7 +133,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 
 		Bg.exit({
 			"CityLocalTime" => data,
-			"MinHr" => gMinHr
+			"MinHr" => gMinHr,
+			"gMinHrNewDay" => gMinHrNewDay
 		});
 	}
 
@@ -213,7 +218,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 
 		Bg.exit({
 			"OpenWeatherMapCurrent" => result,
-			"MinHr" => gMinHr
+			"MinHr" => gMinHr,
+			"gMinHrNewDay" => gMinHrNewDay
 		});
 	}
 

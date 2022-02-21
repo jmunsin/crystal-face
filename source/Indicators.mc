@@ -104,6 +104,9 @@ class Indicators extends Ui.Drawable {
 		if (indicatorType == 6 /* INDICATOR_TYPE_RHR */) {
 			var colour;
 			var txt = "--";
+			if (gMinHr == null) {
+				gMinHr = App.getApp().getProperty("MinHr");
+			}
 			if (gMinHr != null) {
 				txt = gMinHr.format(INTEGER_FORMAT);
 			}
