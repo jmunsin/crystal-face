@@ -19,6 +19,8 @@ class Indicators extends Ui.Drawable {
 	// 	INDICATOR_TYPE_NOTIFICATIONS,
 	// 	INDICATOR_TYPE_BLUETOOTH_OR_NOTIFICATIONS,
 	// 	INDICATOR_TYPE_BATTERY
+	//	INDICATOR_TYPE_BATTERY_NUMERIC
+	//	INDICATOR_TYPE_RHR
 	// }
 
 	function initialize(params) {
@@ -96,6 +98,18 @@ class Indicators extends Ui.Drawable {
 			var availableHeight = mBatteryWidth / 2;
 			drawBatteryMeter(dc, x, y - 6, mBatteryWidth, 2*availableHeight / 3);
 			writeBatteryLevel(dc, x, y - 6 + availableHeight / 4, mBatteryWidth, availableHeight / 3);
+			return;
+		}
+
+		if (indicatorType == 6 /* INDICATOR_TYPE_RHR */) {
+			var colour;
+			var txt = "--";
+			if (gMinHr != null) {
+				txt = gMinHr.format(INTEGER_FORMAT);
+			}
+			colour = gThemeColour;
+			dc.setColor(colour, Graphics.COLOR_TRANSPARENT);
+			dc.drawText(x - (2 + mBatteryWidth / 3), y - mBatteryWidth/2, gNormalFont, txt, Graphics.TEXT_JUSTIFY_LEFT);
 			return;
 		}
 

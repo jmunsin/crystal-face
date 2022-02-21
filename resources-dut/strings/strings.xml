@@ -66,6 +66,7 @@
 	<string id="HeartRateLive5s">Hartslag (Live 5s)</string>
 	<string id="Battery">Batterij</string>
 	<string id="BatteryNumeric">Battery Numeric</string>
+	<string id="RHR">Resting Heart Rate</string>
 	<string id="BatteryHidePercentage">Batterij (Verberg Percentage)</string>
 	<string id="Notifications">Notificaties</string>
 	<string id="Calories">Calorien</string>
