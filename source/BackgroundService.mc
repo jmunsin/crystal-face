@@ -3,6 +3,7 @@ using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
 using Toybox.Time;
+using Toybox.Time.Gregorian;
 
 (:background)
 class BackgroundService extends Sys.ServiceDelegate {
@@ -29,18 +30,20 @@ class BackgroundService extends Sys.ServiceDelegate {
 		}
 		var now = Time.now();
 		var min;
-		if (gLastHrPoll != null) {
-			min = ActivityMonitor.getHeartRateHistory(now - gLastHrPoll, true).getMin();
+		if (lastTime != null) {
+			var sinceLast = now.subtract(lastTime);
+			min = ActivityMonitor.getHeartRateHistory(sinceLast, true).getMin();
 		} else {
 			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 		}
-		if (gMinHr == null || min < gMinHr || gLastHrPoll.day != now.day) {
+		var lastTimeI = Gregorian.info(lastTime, Time.FORMAT_SHORT);
+		var nowI = Gregorian.info(now, Time.FORMAT_SHORT);
+		if (gMinHr == null || min < gMinHr || lastTimeI.day != nowI.day) {
 			gMinHr = min;
 		}
-		if (gLastHrPoll != null && gLastHrPoll.day != now.day) {
+		if (lastTimeI != null && lastTimeI.day != nowI.day) {
 			gMinHrNewDay = true;
 		}
-		gLastHrPoll = now;
 		//Sys.println("rhhr: " + gMinHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
 		if (pendingWebRequests != null) {

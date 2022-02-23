@@ -11,7 +11,6 @@ using Toybox.Time;
 // location available.
 var gLocationLat = null;
 var gLocationLng = null;
-var gLastHrPoll = null;
 var gMinHr = null;
 var gMinHrNewDay = false;
 
