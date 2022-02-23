@@ -33,6 +33,9 @@ class BackgroundService extends Sys.ServiceDelegate {
 		if (lastTime != null) {
 			var sinceLast = now.subtract(lastTime);
 			min = ActivityMonitor.getHeartRateHistory(sinceLast, true).getMin();
+			if (min == null || min == 255) {
+				min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
+			}
 		} else {
 			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 		}
