@@ -93,14 +93,18 @@ class BackgroundService extends Sys.ServiceDelegate {
 					},
 					method(:onReceiveOpenWeatherMapCurrent)
 				);
+			} else {
+				Bg.exit({
+					"MinHr" => minHr,
+					"MinHrNewDay" => minHrNewDay
+				});
 			}
-		} /* else {
-			Sys.println("onTemporalEvent() called with no pending web requests!");
-		} */
-		Bg.exit({
-			"MinHr" => minHr,
-			"MinHrNewDay" => minHrNewDay
-		});
+		} else {
+			Bg.exit({
+				"MinHr" => minHr,
+				"MinHrNewDay" => minHrNewDay
+			});
+		}
 	}
 
 	// Sample time zone data:
