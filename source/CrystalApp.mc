@@ -200,7 +200,7 @@ class CrystalApp extends App.AppBase {
 	(:background_method)
 	function onBackgroundData(data) {
 		var minHr = data.get("MinHr");
-		var minHrNewDay = data.get("gMinHrNewDay");
+		var minHrNewDay = data.get("MinHrNewDay");
 		if (gMinHr == null) {
 			gMinHr = getProperty("MinHr");
 		}

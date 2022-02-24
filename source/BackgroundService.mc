@@ -7,6 +7,9 @@ using Toybox.Time.Gregorian;
 
 (:background)
 class BackgroundService extends Sys.ServiceDelegate {
+	var lastHrPoll = null;
+	var minHr = null;
+	var minHrNewDay = false;
 	
 	(:background_method)
 	function initialize() {
@@ -29,25 +32,26 @@ class BackgroundService extends Sys.ServiceDelegate {
 			Bg.registerForTemporalEvent(Time.now());
 		}
 		var now = Time.now();
-		var min;
-		if (lastTime != null) {
-			var sinceLast = now.subtract(lastTime);
+		if (lastHrPoll != null) {
+			var sinceLast = now.subtract(lastHrPoll);
+			var min;
 			min = ActivityMonitor.getHeartRateHistory(sinceLast, true).getMin();
 			if (min == null || min == 255) {
 				min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 			}
+			var lastTimeI = Gregorian.info(lastHrPoll, Time.FORMAT_SHORT);
+			var nowI = Gregorian.info(now, Time.FORMAT_SHORT);
+			if (minHr == null || min < minHr || lastTimeI.day != nowI.day) {
+				minHr = min;
+			}
+			if (lastTimeI != null && lastTimeI.day != nowI.day) {
+				minHrNewDay = true;
+			}
 		} else {
-			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
+			minHr = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 		}
-		var lastTimeI = Gregorian.info(lastTime, Time.FORMAT_SHORT);
-		var nowI = Gregorian.info(now, Time.FORMAT_SHORT);
-		if (gMinHr == null || min < gMinHr || lastTimeI.day != nowI.day) {
-			gMinHr = min;
-		}
-		if (lastTimeI != null && lastTimeI.day != nowI.day) {
-			gMinHrNewDay = true;
-		}
-		//Sys.println("rhhr: " + gMinHr);
+		lastHrPoll = now;
+		//Sys.println("rhhr: " + minHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
 		if (pendingWebRequests != null) {
 
@@ -94,8 +98,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 			Sys.println("onTemporalEvent() called with no pending web requests!");
 		} */
 		Bg.exit({
-			"MinHr" => gMinHr,
-			"gMinHrNewDay" => gMinHrNewDay
+			"MinHr" => minHr,
+			"MinHrNewDay" => minHrNewDay
 		});
 	}
 
@@ -139,8 +143,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 
 		Bg.exit({
 			"CityLocalTime" => data,
-			"MinHr" => gMinHr,
-			"gMinHrNewDay" => gMinHrNewDay
+			"MinHr" => minHr,
+			"MinHrNewDay" => minHrNewDay
 		});
 	}
 
@@ -224,8 +228,8 @@ class BackgroundService extends Sys.ServiceDelegate {
 
 		Bg.exit({
 			"OpenWeatherMapCurrent" => result,
-			"MinHr" => gMinHr,
-			"gMinHrNewDay" => gMinHrNewDay
+			"MinHr" => minHr,
+			"MinHrNewDay" => minHrNewDay
 		});
 	}
 
