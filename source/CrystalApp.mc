@@ -214,10 +214,16 @@ class CrystalApp extends App.AppBase {
 			pendingWebRequests = {};
 		}
 
-		var type = data.keys()[0]; // Type of received data.
-		if (!type.equals("MinHr")) {
+		var type;
+		var receivedData;
+		type = "OpenWeatherMapCurrent";
+		receivedData = data.get(type);
+		if (receivedData == null) {
+			type = "CityLocalTime";
+			receivedData = data.get(type);
+		}
+		if (receivedData != null) {
 			var storedData = getProperty(type);
-			var receivedData = data[type]; // The actual data received: strip away type key.
 
 			// No value in showing any HTTP error to the user, so no need to modify stored data.
 			// Leave pendingWebRequests flag set, and simply return early.
