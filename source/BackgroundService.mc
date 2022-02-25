@@ -10,6 +10,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 	var lastHrPoll = null;
 	var minHr = null;
 	var minHrNewDay = false;
+	var sendHr = false;
 	
 	(:background_method)
 	function initialize() {
@@ -51,6 +52,17 @@ class BackgroundService extends Sys.ServiceDelegate {
 			minHr = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 		}
 		lastHrPoll = now;
+		sendHr = false;
+		if (minHrNewDay) {
+			sendHr = true;
+		} else {
+			var propMinHr = App.getApp().getProperty("MinHr");
+			if (propMinHr == null) {
+				sendHr = true;
+			} else if (minHr < propMinHr) {
+				sendHr = true;
+			}
+		}
 		//Sys.println("rhhr: " + minHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
 		if (pendingWebRequests != null) {
@@ -94,16 +106,20 @@ class BackgroundService extends Sys.ServiceDelegate {
 					method(:onReceiveOpenWeatherMapCurrent)
 				);
 			} else {
+				if (sendHr) {
+					Bg.exit({
+						"MinHr" => minHr,
+						"MinHrNewDay" => minHrNewDay
+					});
+				}
+			}
+		} else {
+			if (sendHr) {
 				Bg.exit({
 					"MinHr" => minHr,
 					"MinHrNewDay" => minHrNewDay
 				});
 			}
-		} else {
-			Bg.exit({
-				"MinHr" => minHr,
-				"MinHrNewDay" => minHrNewDay
-			});
 		}
 	}
 
