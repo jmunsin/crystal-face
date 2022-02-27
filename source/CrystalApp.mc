@@ -3,6 +3,7 @@ using Toybox.Background as Bg;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 using Toybox.Time;
+using Toybox.Time.Gregorian;
 
 // In-memory current location.
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
@@ -19,6 +20,7 @@ class CrystalApp extends App.AppBase {
 
 	var mView;
 	var mFieldTypes = new [3];
+	var mLastHrPollDay = null;
 
 	function initialize() {
 		AppBase.initialize();
@@ -200,11 +202,19 @@ class CrystalApp extends App.AppBase {
 	(:background_method)
 	function onBackgroundData(data) {
 		var minHr = data.get("MinHr");
-		var minHrNewDay = data.get("MinHrNewDay");
 		if (gMinHr == null) {
 			gMinHr = getProperty("MinHr");
 		}
-		if (minHrNewDay || gMinHr == null || minHr < gMinHr) {
+		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+		if (mLastHrPollDay == null) {
+			mLastHrPollDay = getProperty("LastHrPollDay");
+		}
+		if (mLastHrPollDay == null || mLastHrPollDay != now.day) {
+			gMinHr = minHr;
+			setProperty("MinHr", gMinHr);
+			mLastHrPollDay = now.day;
+			setProperty("LastHrPollday", mLastHrPollDay);
+		} else if (gMinHr == null || minHr < gMinHr) {
 			gMinHr = minHr;
 			setProperty("MinHr", gMinHr);
 		}
