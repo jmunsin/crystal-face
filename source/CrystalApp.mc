@@ -13,7 +13,6 @@ using Toybox.Time.Gregorian;
 var gLocationLat = null;
 var gLocationLng = null;
 var gMinHr = null;
-var gMinHrNewDay = false;
 
 (:background)
 class CrystalApp extends App.AppBase {
@@ -201,6 +200,7 @@ class CrystalApp extends App.AppBase {
 	// pendingWebRequests keys.
 	(:background_method)
 	function onBackgroundData(data) {
+		Sys.println("onBackgroundData");
 		var minHr = data.get("MinHr");
 		if (gMinHr == null) {
 			gMinHr = getProperty("MinHr");
@@ -213,7 +213,7 @@ class CrystalApp extends App.AppBase {
 			gMinHr = minHr;
 			setProperty("MinHr", gMinHr);
 			mLastHrPollDay = now.day;
-			setProperty("LastHrPollday", mLastHrPollDay);
+			setProperty("LastHrPollDay", mLastHrPollDay);
 		} else if (gMinHr == null || minHr < gMinHr) {
 			gMinHr = minHr;
 			setProperty("MinHr", gMinHr);

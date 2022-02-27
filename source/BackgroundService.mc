@@ -7,7 +7,6 @@ using Toybox.Time;
 (:background)
 class BackgroundService extends Sys.ServiceDelegate {
 	var minHr = null;
-	var sendHr = false;
 	
 	(:background_method)
 	function initialize() {
@@ -37,12 +36,11 @@ class BackgroundService extends Sys.ServiceDelegate {
 			minHr = min;
 		}
 		var propMinHr = App.getApp().getProperty("MinHr");
+		var sendHr = false;
 		if (propMinHr == null) {
 			sendHr = true;
 		} else if (minHr < propMinHr) {
 			sendHr = true;
-		} else {
-			sendHr = false;
 		}
 		//Sys.println("rhhr: " + minHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
