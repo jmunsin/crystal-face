@@ -28,7 +28,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 		} else {
 			Bg.registerForTemporalEvent(Time.now());
 		}
-		var min = ActivityMonitor.getHeartRateHistory(new Time.Duration(300), true).getMin();
+		var min = ActivityMonitor.getHeartRateHistory(new Time.Duration(300), true).getMax();
 		if (min == null || min == 255) {
 			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
 		}
