@@ -3,6 +3,7 @@ using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
 using Toybox.Time;
+using Toybox.Time.Gregorian;
 
 (:background)
 class BackgroundService extends Sys.ServiceDelegate {
@@ -41,6 +42,12 @@ class BackgroundService extends Sys.ServiceDelegate {
 			sendHr = true;
 		} else if (minHr < propMinHr) {
 			sendHr = true;
+		} else {
+			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+			var lastDay = App.getApp().getProperty("LastHrPollDay");
+			if (lastDay != now.day) {
+				sendHr = true;
+			}
 		}
 		//Sys.println("rhhr: " + minHr);
 		var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
