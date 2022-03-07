@@ -29,24 +29,32 @@ class BackgroundService extends Sys.ServiceDelegate {
 		} else {
 			Bg.registerForTemporalEvent(Time.now());
 		}
-		var min = ActivityMonitor.getHeartRateHistory(new Time.Duration(300), true).getMax();
-		if (min == null || min == 255) {
-			min = ActivityMonitor.getHeartRateHistory(new Time.Duration(14400), true).getMin();
+		var history = ActivityMonitor.getHeartRateHistory(new Time.Duration(300), true);
+		var tot = 0;
+		var n = 0;
+		for (var next = history.next(); next != null; next = history.next()) {
+			if (next.heartRate != null && next.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
+				tot += next.heartRate;
+				n++;
+			}
 		}
-		if (minHr == null || min < minHr) {
-			minHr = min;
-		}
-		var propMinHr = App.getApp().getProperty("MinHr");
 		var sendHr = false;
-		if (propMinHr == null) {
-			sendHr = true;
-		} else if (minHr < propMinHr) {
-			sendHr = true;
-		} else {
-			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-			var lastDay = App.getApp().getProperty("LastHrPollDay");
-			if (lastDay != now.day) {
+		if (n > 0) {
+			var min = Math.round(tot/n);
+			if (minHr == null || min < minHr) {
+				minHr = min;
+			}
+			var propMinHr = App.getApp().getProperty("MinHr");
+			if (propMinHr == null) {
 				sendHr = true;
+			} else if (minHr < propMinHr) {
+				sendHr = true;
+			} else {
+				var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+				var lastDay = App.getApp().getProperty("LastHrPollDay");
+				if (lastDay != now.day) {
+					sendHr = true;
+				}
 			}
 		}
 		//Sys.println("rhhr: " + minHr);
