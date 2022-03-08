@@ -29,7 +29,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 		} else {
 			Bg.registerForTemporalEvent(Time.now());
 		}
-		var history = ActivityMonitor.getHeartRateHistory(new Time.Duration(300), true);
+		var history = ActivityMonitor.getHeartRateHistory(new Time.Duration(600), true);
 		var tot = 0;
 		var n = 0;
 		for (var next = history.next(); next != null; next = history.next()) {
