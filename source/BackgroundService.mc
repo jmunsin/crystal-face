@@ -40,7 +40,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 		}
 		var sendHr = false;
 		if (n > 0) {
-			var min = Math.round(tot/n);
+			var min = Math.round(tot.toFloat()/n.toFloat());
 			if (minHr == null || min < minHr) {
 				minHr = min;
 			}
