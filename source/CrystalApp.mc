@@ -200,23 +200,24 @@ class CrystalApp extends App.AppBase {
 	// pendingWebRequests keys.
 	(:background_method)
 	function onBackgroundData(data) {
-		Sys.println("onBackgroundData");
 		var minHr = data.get("MinHr");
-		if (gMinHr == null) {
-			gMinHr = getProperty("MinHr");
-		}
-		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-		if (mLastHrPollDay == null) {
-			mLastHrPollDay = getProperty("LastHrPollDay");
-		}
-		if (mLastHrPollDay == null || mLastHrPollDay != now.day) {
-			gMinHr = minHr;
-			setProperty("MinHr", gMinHr);
-			mLastHrPollDay = now.day;
-			setProperty("LastHrPollDay", mLastHrPollDay);
-		} else if (gMinHr == null || minHr < gMinHr) {
-			gMinHr = minHr;
-			setProperty("MinHr", gMinHr);
+		if (minHr != null) {
+			if (gMinHr == null) {
+				gMinHr = getProperty("MinHr");
+			}
+			var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+			if (mLastHrPollDay == null) {
+				mLastHrPollDay = getProperty("LastHrPollDay");
+			}
+			if (mLastHrPollDay == null || mLastHrPollDay != now.day) {
+				gMinHr = minHr;
+				setProperty("MinHr", gMinHr);
+				mLastHrPollDay = now.day;
+				setProperty("LastHrPollDay", mLastHrPollDay);
+			} else if (gMinHr == null || minHr < gMinHr) {
+				gMinHr = minHr;
+				setProperty("MinHr", gMinHr);
+			}
 		}
 		var pendingWebRequests = getProperty("PendingWebRequests");
 		if (pendingWebRequests == null) {

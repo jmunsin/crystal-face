@@ -32,10 +32,12 @@ class BackgroundService extends Sys.ServiceDelegate {
 		var history = ActivityMonitor.getHeartRateHistory(new Time.Duration(600), true);
 		var tot = 0;
 		var n = 0;
-		for (var next = history.next(); next != null; next = history.next()) {
-			if (next.heartRate != null && next.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
-				tot += next.heartRate;
-				n++;
+		if (history != null) {
+			for (var next = history.next(); next != null; next = history.next()) {
+				if (next.heartRate != null && next.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
+					tot += next.heartRate;
+					n++;
+				}
 			}
 		}
 		var sendHr = false;
